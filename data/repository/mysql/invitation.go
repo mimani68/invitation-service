@@ -9,14 +9,14 @@ import (
 
 func (m *mysql) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
 	lists := []model.Invitation{}
-	rows, err := m.db.Query("SELECT id, code FROM invitations")
+	rows, err := m.db.Query("SELECT id, code, expire FROM invitations")
 	if err != nil {
 		return lists, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var item model.Invitation
-		err := rows.Scan(&item.ID, &item.Code)
+		err := rows.Scan(&item.ID, &item.Code, &item.Expire)
 		if err != nil {
 			fmt.Println(err)
 		}
