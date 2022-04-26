@@ -10,5 +10,6 @@ mysql:
   username: root
   password: mauFJcuf5dhRMQrjj
   db_name: my_database
-  host: mysql
+  # host: mysql
+  host: localhost
   port: 3306

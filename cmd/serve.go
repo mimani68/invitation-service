@@ -30,6 +30,7 @@ func serve(c *cli.Context) error {
 
 	f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
@@ -37,6 +38,7 @@ func serve(c *cli.Context) error {
 
 	mysqlRepo, err := mysql.New(cfg.Mysql, logger)
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 

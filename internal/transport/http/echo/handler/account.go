@@ -18,7 +18,7 @@ func (h *Handler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response.Error{Error: err.Error(), Status: http.StatusBadRequest})
 	}
 
-	token, err := h.Account.Login(c.Request().Context(), req.Username, req.Password)
+	token, err := h.AccountHandler.Login(c.Request().Context(), req.Username, req.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.Error{Error: err.Error(), Status: http.StatusBadRequest}) // i know can better error handling
 	}

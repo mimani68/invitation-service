@@ -1,26 +1,24 @@
 package handler
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) GetListOfCodes(ctx echo.Context) error {
-	c := context.Background()
-	list, _ := h.Code.GetAllCodes(c)
+func (h *Handler) GetListOfInvitations(ctx echo.Context) error {
+	list, _ := h.InvitationHandler.GetAllInvitations(ctx.Request().Context())
 	return ctx.JSON(http.StatusOK, list)
 }
 
-func (h *Handler) GetSingleCodeById(ctx echo.Context) error {
+func (h *Handler) GetSingleInvitationById(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,
 	})
 }
 
-func (h *Handler) CreateNewCode(ctx echo.Context) error {
+func (h *Handler) CreateNewInvitation(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,
@@ -34,28 +32,28 @@ func (h *Handler) ExtendCodeExpireation(ctx echo.Context) error {
 	})
 }
 
-func (h *Handler) VerifyCode(ctx echo.Context) error {
+func (h *Handler) VerifyInvitation(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,
 	})
 }
 
-func (h *Handler) UpdateCode(ctx echo.Context) error {
+func (h *Handler) UpdateInvitation(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,
 	})
 }
 
-func (h *Handler) InactiveCode(ctx echo.Context) error {
+func (h *Handler) InactiveInvitation(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,
 	})
 }
 
-func (h *Handler) DeleteCode(ctx echo.Context) error {
+func (h *Handler) DeleteInvitation(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "125",
 		"isValid": true,

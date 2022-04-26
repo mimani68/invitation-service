@@ -11,11 +11,12 @@ services:
     #   - ./.env
     ports:
       - "3001:3000"
+      - "2345:2345"  # remote debug 
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${PWD}:/app
       - /home/dev/go:/go:ro
-    command: ["go", "run", "init/main.go", "serve", "http"]
+    command: ["go", "run", "main.go", "serve", "http"]
     
   mysql:
     image: mysql:8

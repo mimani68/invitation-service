@@ -8,6 +8,6 @@ import (
 )
 
 func (h *Handler) Ping(c echo.Context) error {
-	pingString, _ := h.System.Ping(c.Request().Context())
+	pingString, _ := h.SystemHandler.Ping(c.Request().Context())
 	return c.JSON(http.StatusOK, response.Ping{Message: pingString})
 }

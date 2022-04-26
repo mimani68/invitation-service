@@ -21,9 +21,9 @@ func New(logger logger.Logger, accSrv service.Account, systemSrv service.System)
 	return &rest{
 		echo: echo.New(),
 		handler: &handler.Handler{
-			Logger:  logger,
-			Account: accSrv,
-			System:  systemSrv,
+			Logger:         logger,
+			AccountHandler: accSrv,
+			SystemHandler:  systemSrv,
 		}}
 }
 

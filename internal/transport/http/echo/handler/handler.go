@@ -6,8 +6,8 @@ import (
 )
 
 type Handler struct {
-	Logger  logger.Logger
-	Account service.Account
-	System  service.System
-	Code    service.Code
+	Logger            logger.Logger
+	AccountHandler    service.Account
+	SystemHandler     service.System
+	InvitationHandler service.Invitation
 }
