@@ -1,4 +1,4 @@
-package account
+package invitation
 
 import (
 	"context"
@@ -10,22 +10,22 @@ import (
 	"pluseid.io/invitation/internal/pkg/logger"
 )
 
-type InvitationService struct {
+type invitationSrv struct {
 	cfg    config.Account
 	mysql  repository.Mysql
 	logger logger.Logger
 }
 
 func New(cfg config.Account, mysql repository.Mysql, logger logger.Logger) service.Invitation {
-	return &InvitationService{
+	return &invitationSrv{
 		cfg:    cfg,
 		mysql:  mysql,
 		logger: logger,
 	}
 }
 
-func (a *InvitationService) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
-	invitationList, err := a.mysql.GetAllInvitations(ctx)
+func (i *invitationSrv) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
+	invitationList, err := i.mysql.GetAllInvitations(ctx)
 	if err != nil {
 		return []model.Invitation{}, err
 	}

@@ -11,6 +11,7 @@ import (
 	"pluseid.io/invitation/config"
 	"pluseid.io/invitation/data/repository/mysql"
 	"pluseid.io/invitation/data/service/account"
+	"pluseid.io/invitation/data/service/invitation"
 	"pluseid.io/invitation/data/service/system"
 	"pluseid.io/invitation/internal/pkg/logger/zap"
 	"pluseid.io/invitation/internal/transport/http/echo"
@@ -44,8 +45,9 @@ func serve(c *cli.Context) error {
 
 	accSrv := account.New(cfg.Account, mysqlRepo, logger)
 	systemSrv := system.New(cfg.Account, mysqlRepo, logger)
+	invitationSrv := invitation.New(cfg.Account, mysqlRepo, logger)
 
-	restServer := echo.New(logger, accSrv, systemSrv)
+	restServer := echo.New(logger, accSrv, systemSrv, invitationSrv)
 	go func() {
 		if err := restServer.Start(cfg.App.Address); err != nil {
 			logger.Error(fmt.Sprintf("error happen while serving: %v", err))

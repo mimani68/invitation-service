@@ -1,13 +1,17 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (h *Handler) GetListOfInvitations(ctx echo.Context) error {
-	list, _ := h.InvitationHandler.GetAllInvitations(ctx.Request().Context())
+	list, err := h.InvitationSrv.GetAllInvitations(ctx.Request().Context())
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	return ctx.JSON(http.StatusOK, list)
 }
 

@@ -10,21 +10,21 @@ import (
 	"pluseid.io/invitation/internal/pkg/logger"
 )
 
-type acc struct {
+type accountSrv struct {
 	cfg    config.Account
 	mysql  repository.Mysql
 	logger logger.Logger
 }
 
 func New(cfg config.Account, mysql repository.Mysql, logger logger.Logger) service.Account {
-	return &acc{
+	return &accountSrv{
 		cfg:    cfg,
 		mysql:  mysql,
 		logger: logger,
 	}
 }
 
-func (a *acc) Login(ctx context.Context, username, password string) (string, error) {
+func (a *accountSrv) Login(ctx context.Context, username, password string) (string, error) {
 	// start span with context
 
 	user, err := a.mysql.GetUserByUsername(ctx, username)
@@ -40,6 +40,6 @@ func (a *acc) Login(ctx context.Context, username, password string) (string, err
 	return token, nil
 }
 
-func (a *acc) Register(ctx context.Context, user *model.User) (string, error) {
+func (a *accountSrv) Register(ctx context.Context, user *model.User) (string, error) {
 	return "", nil
 }

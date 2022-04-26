@@ -9,9 +9,10 @@ func (r *rest) routing() {
 
 	r.echo.GET("/ping", r.handler.Ping)
 
+	r.echo.POST("/login", r.handler.Login)
+	r.echo.POST("/register", r.handler.Register)
+
 	console := r.echo.Group("console/v1", middleware.BasicAuth(auth.BasicAuthentication))
-	// console.POST("/v1/login", r.handler.Login)
-	// console.POST("/v1/register", r.handler.Register)
 
 	codeRoute := console.Group("/codes")
 	codeRoute.GET("", r.handler.GetListOfInvitations)

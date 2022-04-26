@@ -8,11 +8,19 @@ import (
 )
 
 func (m *mysql) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
-	// rows := m.db.QueryRow("SELECT * FROM invitation WHERE bird = $1 LIMIT $2", birdName, 1)
 	lists := []model.Invitation{}
-	err := m.db.QueryRow("SELECT * FROM invitations LIMIT $1", 10).Scan(&lists)
+	rows, err := m.db.Query("SELECT id, code FROM invitations")
 	if err != nil {
-		fmt.Println(err)
+		return lists, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var item model.Invitation
+		err := rows.Scan(&item.ID, &item.Code)
+		if err != nil {
+			fmt.Println(err)
+		}
+		lists = append(lists, item)
 	}
 	return lists, nil
 }

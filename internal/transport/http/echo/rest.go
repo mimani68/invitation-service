@@ -17,13 +17,14 @@ type rest struct {
 	handler *handler.Handler
 }
 
-func New(logger logger.Logger, accSrv service.Account, systemSrv service.System) http.Rest {
+func New(logger logger.Logger, accSrv service.Account, systemSrv service.System, invitationSrv service.Invitation) http.Rest {
 	return &rest{
 		echo: echo.New(),
 		handler: &handler.Handler{
-			Logger:         logger,
-			AccountHandler: accSrv,
-			SystemHandler:  systemSrv,
+			Logger:        logger,
+			AccountSrv:    accSrv,
+			SystemSrv:     systemSrv,
+			InvitationSrv: invitationSrv,
 		}}
 }
 
