@@ -24,11 +24,11 @@ func New(cfg config.Account, mysql repository.Mysql, logger logger.Logger) servi
 }
 
 func (a *codeService) GetAllCodes(ctx context.Context) (string, error) {
-	user, err := a.mysql.GetUserByUsername(ctx, "as")
-	if err != nil {
-		return "", err
-	}
-	_ = user
+	// user, err := a.mysql.GetAllInvitations(ctx)
+	// if err != nil {
+	// 	return "", err
+	// }
+	// _ = user
 	// check password
 
 	// create token

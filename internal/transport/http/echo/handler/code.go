@@ -8,18 +8,9 @@ import (
 )
 
 func (h *Handler) GetListOfCodes(ctx echo.Context) error {
-	c := context.Context()
+	c := context.Background()
 	list, _ := h.Code.GetAllCodes(c)
-	return ctx.JSON(http.StatusOK, []map[string]interface{}{
-		{
-			"code":    "125",
-			"isValid": true,
-		},
-		{
-			"code":    "125",
-			"isValid": true,
-		},
-	})
+	return ctx.JSON(http.StatusOK, list)
 }
 
 func (h *Handler) GetSingleCodeById(ctx echo.Context) error {

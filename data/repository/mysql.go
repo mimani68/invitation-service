@@ -12,4 +12,7 @@ type Mysql interface {
 	GetUserByID(ctx context.Context, id int) (*model.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
 	DeleteUser(ctx context.Context, id int) error
+
+	GetAllInvitations(ctx context.Context) error
+	CreateNewInviteCode(ctx context.Context, code *model.User) error
 }
