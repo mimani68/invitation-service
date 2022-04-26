@@ -9,4 +9,5 @@ type Handler struct {
 	Logger  logger.Logger
 	Account service.Account
 	System  service.System
+	Code    service.Code
 }

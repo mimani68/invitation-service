@@ -1,12 +1,15 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (h *Handler) GetListOfCodes(ctx echo.Context) error {
+	c := context.Context()
+	list, _ := h.Code.GetAllCodes(c)
 	return ctx.JSON(http.StatusOK, []map[string]interface{}{
 		{
 			"code":    "125",
