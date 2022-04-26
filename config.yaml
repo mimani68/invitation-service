@@ -1,0 +1,14 @@
+app:
+  name: test
+  port: 0.0.0.0:3000
+
+# admin:
+#   username: admin_hc7gX2
+#   password: AoHth$ae9ya8peEpH9O0hQu7su2Pol
+
+mysql:
+  username: root
+  password: mauFJcuf5dhRMQrjj
+  db_name: my_database
+  host: mysql
+  port: 3306

@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+
+  app:
+    image: golang:1.16.3-buster
+    restart: always
+    working_dir: /app
+    # If .env file dosen't need change
+    # env_file:
+    #   - ./.env
+    ports:
+      - "3001:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PWD}:/app
+      - /home/dev/go:/go:ro
+    command: ["go", "run", "init/main.go", "serve", "http"]
+    
+  mysql:
+    image: mysql:8
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=my_database
+      - MYSQL_ROOT_PASSWORD=mauFJcuf5dhRMQrjj
+    ports:
+      - '3306:3306'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - MYSQL_DATA:/var/lib/mysql
+
+  # postgres:
+  #   image: postgres:10.12
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: pluseId
+  #     POSTGRES_USER: event_user
+  #     POSTGRES_PASSWORD: "1234"
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - PGDATA:/var/lib/postgresql/data/pgdata
+  #   ports:
+  #     - 5432:5432
+
+  # redis:
+  #   image: redis:5-alpine
+  #   ports:
+  #     - 6379:6379
+
+  dozzle:
+    image: amir20/dozzle:latest
+    ports:
+      - 9991:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      
+  echo:
+    image: ealen/echo-server
+    restart: always
+    ports:
+      - "1234:80"
+
+volumes:
+  PGDATA:
+  MYSQL_DATA:
