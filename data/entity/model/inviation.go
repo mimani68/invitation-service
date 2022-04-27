@@ -1,7 +1,7 @@
 package model
 
 type Invitation struct {
-	ID               int    `json:"id"`
+	Id               int    `json:"id"`
 	Code             string `json:"code"`
 	Expire           string `json:"expire"`
 	Include          string `json:"include"`

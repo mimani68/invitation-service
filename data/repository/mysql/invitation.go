@@ -2,21 +2,31 @@ package mysql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"pluseid.io/invitation/data/entity/model"
+	"pluseid.io/invitation/data/repository"
 )
 
-func (m *mysql) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
+func (m *mysql) GetAllInvitations(ctx context.Context, meta repository.QueryMeta) ([]model.Invitation, error) {
 	lists := []model.Invitation{}
-	rows, err := m.db.Query("SELECT id, code, expire FROM invitations")
+	var rows *sql.Rows
+	var err error
+	if meta.Query {
+		sql := "SELECT id, code, expire FROM invitations WHERE is_active = ?"
+		rows, err = m.db.Query(sql, meta.IsActive)
+	} else {
+		sql := "SELECT id, code, expire FROM invitations"
+		rows, err = m.db.Query(sql)
+	}
 	if err != nil {
 		return lists, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var item model.Invitation
-		err := rows.Scan(&item.ID, &item.Code, &item.Expire)
+		err := rows.Scan(&item.Id, &item.Code, &item.Expire)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -32,7 +42,8 @@ func (m *mysql) GetInvitationById(ctx context.Context, invitationId int) (model.
 		return item, err
 	}
 	defer rows.Close()
-	errScan := rows.Scan(&item.ID, &item.Code, &item.Expire)
+	rows.Next()
+	errScan := rows.Scan(&item.Id, &item.Code, &item.Expire)
 	if err != nil {
 		fmt.Println(errScan)
 	}
@@ -42,45 +53,59 @@ func (m *mysql) GetInvitationById(ctx context.Context, invitationId int) (model.
 	return item, nil
 }
 
+func (m *mysql) GetInvitationByCode(ctx context.Context, code string) (bool, error) {
+	item := model.Invitation{}
+	rows, err := m.db.Query("SELECT id, code, expire FROM invitations WHERE code = ?", code)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+	rows.Next()
+	errScan := rows.Scan(&item.Id, &item.Code, &item.Expire)
+	if errScan != nil {
+		fmt.Println(errScan)
+		return false, err
+	}
+	return item.Id > 0, nil
+}
+
 func (m *mysql) CreateNewInviteCode(ctx context.Context, newItem model.Invitation) (model.Invitation, error) {
 	sqlStatement := `
-	INSERT INTO invitations (code, expire, is_active, include, exclude)
-	VALUES ($1, $2, true, $3, $4)
-	RETURNING id;
+	INSERT INTO invitations (id, code, expire, is_active, include, exclude, created_at)
+	VALUES (NULL, ?, ?, true, ?, ?, NOW());
 	`
-	result, err := m.db.Exec(sqlStatement, newItem.Code, newItem.Expire, newItem.Include, newItem.Exclude)
+	item := model.Invitation{}
+	rows, err := m.db.Query(sqlStatement, newItem.Code, newItem.Expire, newItem.Include, newItem.Exclude)
 	if err != nil {
-		return newItem, err
+		return item, err
 	}
-	fmt.Println(result)
-	// errScan := rows.Scan(&item.ID, &item.Code, &item.Expire)
-	// if err != nil {
-	// 	fmt.Println(errScan)
-	// }
-	if err != nil {
-		return newItem, err
+	defer rows.Close()
+	rows.Next()
+	errScan := rows.Scan(&item.Id, &item.CreatedAt)
+	if errScan != nil {
+		fmt.Println(errScan)
 	}
+	newItem.Id = item.Id
+	newItem.CreatedAt = item.CreatedAt
 	return newItem, nil
 }
 
 func (m *mysql) UpdateInvitation(ctx context.Context, invitationId int, updatedItem model.Invitation) (model.Invitation, error) {
 	sqlStatement := `
 	UPDATE invitations
-	SET code = $2, expire = $3, include = $4, exclude = $5
-	WHERE id = $1
-	RETURNING id, code;
+	SET code = ?, expire = ?, include = ?, exclude = ?, is_active = ?
+	WHERE id = ?;
 	`
-	result, err := m.db.Exec(sqlStatement, invitationId, updatedItem.Code, updatedItem.Expire, updatedItem.Include, updatedItem.Exclude)
+	item := model.Invitation{}
+	rows, err := m.db.Query(sqlStatement, updatedItem.Code, updatedItem.Expire, updatedItem.Include, updatedItem.Exclude, updatedItem.IsActive, invitationId)
 	if err != nil {
 		return updatedItem, err
 	}
-	fmt.Println(result)
-	// errScan := rows.Scan(&item.ID, &item.Code, &item.Expire)
-	// if err != nil {
-	// 	fmt.Println(errScan)
-	// }
-	if err != nil {
-		return updatedItem, err
+	defer rows.Close()
+	rows.Next()
+	errScan := rows.Scan(&item.Id, &item.CreatedAt)
+	if errScan != nil {
+		fmt.Println(errScan)
 	}
 	return updatedItem, nil
 }
@@ -88,20 +113,18 @@ func (m *mysql) UpdateInvitation(ctx context.Context, invitationId int, updatedI
 func (m *mysql) DeleteInvitation(ctx context.Context, invitationId int) (model.Invitation, error) {
 	sqlStatement := `
 	DELETE FROM invitations
-	WHERE id = $1
-	RETURNING id, code;
+	WHERE id = ?;
 	`
-	result, err := m.db.Exec(sqlStatement, invitationId)
+	item := model.Invitation{}
+	rows, err := m.db.Query(sqlStatement, invitationId)
 	if err != nil {
 		return model.Invitation{}, err
 	}
-	fmt.Println(result)
-	// errScan := rows.Scan(&item.ID, &item.Code, &item.Expire)
-	// if err != nil {
-	// 	fmt.Println(errScan)
-	// }
-	if err != nil {
-		return model.Invitation{}, err
+	defer rows.Close()
+	rows.Next()
+	errScan := rows.Scan(&item.Id, &item.CreatedAt)
+	if errScan != nil {
+		fmt.Println(errScan)
 	}
 	return model.Invitation{}, nil
 }

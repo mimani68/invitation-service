@@ -5,7 +5,7 @@ import (
 )
 
 func CodeGenerator(n int) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)(*$!&")
+	var letters = []rune("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	if n <= 0 {
 		n = rand.Int()
 	}
@@ -14,5 +14,4 @@ func CodeGenerator(n int) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
-	// return rand.Seed(time.Now().UnixNano())
 }

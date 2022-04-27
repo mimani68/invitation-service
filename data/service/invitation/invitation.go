@@ -26,8 +26,8 @@ func New(cfg config.Account, mysql repository.Mysql, logger logger.Logger) servi
 	}
 }
 
-func (i *invitationSrv) GetAllInvitations(ctx context.Context) ([]model.Invitation, error) {
-	invitationList, err := i.mysql.GetAllInvitations(ctx)
+func (i *invitationSrv) GetAllInvitations(ctx context.Context, meta repository.QueryMeta) ([]model.Invitation, error) {
+	invitationList, err := i.mysql.GetAllInvitations(ctx, meta)
 	if err != nil {
 		return []model.Invitation{}, err
 	}
@@ -43,9 +43,10 @@ func (i *invitationSrv) GetInvitationById(ctx context.Context, id int) (model.In
 }
 
 func (i *invitationSrv) CreateInvitation(ctx context.Context, newItem model.Invitation) (model.Invitation, error) {
-	newItem.ID = 0
+	// newItem.Id = 0
 	newItem.Code = keygen.CodeGenerator(10)
 	newItem.Expire = time.Now().Add(7 * 24 * time.Hour).Format(time.RFC3339)
+	newItem.IsActive = true
 	invitation, err := i.mysql.CreateNewInviteCode(ctx, newItem)
 	if err != nil {
 		return model.Invitation{}, err
@@ -97,7 +98,7 @@ func (i *invitationSrv) RecalldInvitationById(ctx context.Context, id int) (mode
 	return updatedItem, nil
 }
 
-func (i *invitationSrv) VerifyInvitationByCode(ctx context.Context, id int) bool {
-	_, err := i.GetInvitationById(ctx, id)
-	return err != nil
+func (i *invitationSrv) VerifyInvitationByCode(ctx context.Context, code string) bool {
+	isValid, _ := i.mysql.GetInvitationByCode(ctx, code)
+	return isValid
 }
