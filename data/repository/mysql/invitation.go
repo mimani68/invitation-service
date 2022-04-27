@@ -55,7 +55,8 @@ func (m *mysql) GetInvitationById(ctx context.Context, invitationId int) (model.
 
 func (m *mysql) GetInvitationByCode(ctx context.Context, code string) (bool, error) {
 	item := model.Invitation{}
-	rows, err := m.db.Query("SELECT id, code, expire FROM invitations WHERE code = ?", code)
+	sqlStatement := `SELECT id, code, expire FROM invitations WHERE code = ? AND expire >= NOW()`
+	rows, err := m.db.Query(sqlStatement, code)
 	if err != nil {
 		return false, err
 	}
