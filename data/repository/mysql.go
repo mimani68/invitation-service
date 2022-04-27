@@ -14,5 +14,8 @@ type Mysql interface {
 	DeleteUser(ctx context.Context, id int) error
 
 	GetAllInvitations(ctx context.Context) ([]model.Invitation, error)
-	CreateNewInviteCode(ctx context.Context, code *model.User) error
+	GetInvitationById(ctx context.Context, invitationId int) (model.Invitation, error)
+	CreateNewInviteCode(ctx context.Context, newItem model.Invitation) (model.Invitation, error)
+	UpdateInvitation(ctx context.Context, invitationId int, updatedItem model.Invitation) (model.Invitation, error)
+	DeleteInvitation(ctx context.Context, invitationId int) (model.Invitation, error)
 }
